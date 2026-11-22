@@ -143,6 +143,26 @@ append-only 操作紀錄。新 entry 加在檔案末端。
 - 設計：米白紙感、深咖啡文字、焦糖重點、手繪流程與 assets 圖片
 - 功能：鍵盤、觸控、滑鼠翻頁、進度與列印版面
 
+## [2026-11-23] update | Wiki Links on Each Slide
+- 更新：13 頁投影片頁腳均加入對應 Wiki 連結。
+- 層級：流程頁、概念頁、實體頁及來源頁依當頁內容列出。
+- 範圍：維護與索引頁另連至 `AGENTS.md`、`index.md` 與 `log.md`。
+
+## [2026-11-23] fix | Make GitHub Pages Wiki Links Visible
+- 修正：將頁腳 Wiki 連結改為醒目膠囊標籤。
+- 修正：將頁碼移至右上角，避免與右下角頁腳連結重疊。
+- 同步：保留相對連結，讓連結可隨儲存庫或 Pages 路徑正確解析。
+
+## [2026-11-23] output | Public HTML Wiki
+- 產出：將 38 個 Wiki Markdown 頁面轉換為對應 `.html` 頁面。
+- 更新：簡報 13 頁頁腳改用可公開瀏覽的 HTML 連結。
+- 索引：根目錄 `index.html` 提供 Wiki 入口。
+
+## [2026-11-23] update | Slide Wiki Topic Labels
+- 更新：每頁頁腳改為直接顯示對應 Wiki 主題，不再使用超連結或連結膠囊。
+- 範圍：13 頁均標示流程、實體、概念或來源主題。
+- 視覺：保留焦糖色標題與虛線膠囊，避免破壞簡報版面。
+
 ## [2026-11-22] output | Coffee From Seed to Cup Slides
 - 產出：`outputs/coffee-from-seed-to-cup.html`
 - 內容：依 Wiki 主鏈條製作 13 頁簡報式投影片，涵蓋種植、處理、烘焙、沖煮、杯測、台灣脈絡與知識維護。

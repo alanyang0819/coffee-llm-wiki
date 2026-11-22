@@ -300,7 +300,35 @@
       color: var(--coffee-2);
       font-size: clamp(11px, .9vw, 14px);
     }
+    .wiki-map {
+      max-width: 72%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 4px 10px;
+      text-align: left;
+      font-size: clamp(12px, .95vw, 15px);
+      line-height: 1.35;
+    }
+    .wiki-map strong {
+      color: var(--caramel);
+      font-weight: 900;
+      align-self: center;
+    }
+    .wiki-map span {
+      color: var(--coffee);
+      background: rgba(255,250,240,.82);
+      border: 1.5px dashed var(--caramel);
+      border-radius: 999px;
+      padding: 3px 8px 4px;
+      font-weight: 800;
+    }
     .dark .footer { color: rgba(246,238,220,.68); }
+    .dark .wiki-map span {
+      color: var(--cream);
+      background: rgba(255,250,240,.10);
+      border-color: rgba(230,183,120,.72);
+    }
     .progress {
       position: fixed;
       z-index: 110;
@@ -314,7 +342,8 @@
       position: fixed;
       z-index: 110;
       right: 18px;
-      bottom: 13px;
+      top: 14px;
+      bottom: auto;
       color: rgba(58,39,28,.55);
       font-size: 12px;
       font-weight: 900;
@@ -368,7 +397,10 @@
         <img src="../raw/assets/咖啡果實.png" alt="咖啡果實">
       </div>
     </div>
-    <div class="footer"><span>咖啡 LLM Wiki</span><span>2026</span></div>
+    <div class="footer">
+      <span>咖啡 LLM Wiki</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>咖啡完整旅程</span><span>總覽</span></span>
+    </div>
   </section>
 
   <section class="slide">
@@ -388,7 +420,10 @@
       </div>
       <p class="source">品質回饋：杯測結果可修正處理、烘焙與栽種決策。</p>
     </div>
-    <div class="footer"><span>主要流程</span><span>02</span></div>
+    <div class="footer">
+      <span>主要流程</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>咖啡完整旅程</span><span>種植流程</span><span>處理流程</span><span>烘焙流程</span><span>沖煮流程</span><span>杯測回饋</span></span>
+    </div>
   </section>
 
   <section class="slide">
@@ -408,7 +443,10 @@
         <img src="../raw/assets/咖啡果實.png" alt="咖啡果實">
       </div>
     </div>
-    <div class="footer"><span>種植</span><span>03</span></div>
+    <div class="footer">
+      <span>種植</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>咖啡栽培</span><span>氣候與土壤</span><span>咖啡栽培來源</span></span>
+    </div>
   </section>
 
   <section class="slide">
@@ -421,7 +459,10 @@
         <article class="card"><strong><svg class="doodle" viewBox="0 0 40 40"><path d="M20 34V10M10 34h20M13 16l7 5 7-7M13 26l7-5 7 7"/></svg>繁殖與整枝</strong><p>種子繁殖為主，新鮮種子約 5–8 週發芽；輪流更新主枝。</p><span class="tag">定植 12–3 月</span></article>
       </div>
     </div>
-    <div class="footer"><span>實體與概念</span><span>04</span></div>
+    <div class="footer">
+      <span>實體與概念</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>經濟栽培品種</span><span>繁殖與定植</span><span>整枝與更新</span><span>施肥管理</span></span>
+    </div>
   </section>
 
   <section class="slide">
@@ -440,7 +481,10 @@
         <p class="source">三法乾燥後生豆含水率約 11–13%；實際值需依標準校正。</p>
       </div>
     </div>
-    <div class="footer"><span>採收後處理</span><span>05</span></div>
+    <div class="footer">
+      <span>採收後處理</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>Coffee Processing</span><span>日曬法</span><span>水洗法</span><span>半水洗法</span></span>
+    </div>
   </section>
 
   <section class="slide">
@@ -455,7 +499,10 @@
       </div>
       <p class="source">黑／紅／黃／白的精確比例在來源中未給；名稱因產區作法而異。</p>
     </div>
-    <div class="footer"><span>蜜處理分類</span><span>06</span></div>
+    <div class="footer">
+      <span>蜜處理分類</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>蜜處理</span><span>半水洗法</span><span>黑／紅／黃／白蜜</span><span>後製分類來源</span></span>
+    </div>
   </section>
 
   <section class="slide dark">
@@ -471,7 +518,10 @@
         <img src="../raw/assets/咖啡豆烘焙曲線.png" alt="咖啡豆烘焙曲線">
       </div>
     </div>
-    <div class="footer"><span>烘焙變化</span><span>07</span></div>
+    <div class="footer">
+      <span>烘焙變化</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>Coffee Roasting</span><span>烘焙階段</span><span>烘焙後變化</span><span>烘焙來源</span></span>
+    </div>
   </section>
 
   <section class="slide">
@@ -486,7 +536,10 @@
       </div>
       <p class="source">曲線案例來自特定烘焙機與批次，不是通用配方。</p>
     </div>
-    <div class="footer"><span>烘焙階段</span><span>08</span></div>
+    <div class="footer">
+      <span>烘焙階段</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>烘焙階段</span><span>A／B／C</span><span>烘焙曲線與重複性</span><span>烘焙風味校正</span></span>
+    </div>
   </section>
 
   <section class="slide">
@@ -505,7 +558,10 @@
         </ul>
       </div>
     </div>
-    <div class="footer"><span>萃取控制</span><span>09</span></div>
+    <div class="footer">
+      <span>萃取控制</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>Coffee Brewing</span><span>研磨粗細</span><span>沖泡萃取變因</span></span>
+    </div>
   </section>
 
   <section class="slide">
@@ -518,7 +574,10 @@
         <article class="card"><strong><svg class="doodle" viewBox="0 0 40 40"><path d="M11 8h18l-4 12H15ZM15 20h10l-3 13H18ZM14 33h12"/></svg>手沖／掛耳／美式機</strong><p>重力、濾紙與注水方式控制接觸時間及均勻度。</p><span class="tag">重力 × 濾液</span></article>
       </div>
     </div>
-    <div class="footer"><span>沖泡方式</span><span>10</span></div>
+    <div class="footer">
+      <span>沖泡方式</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>咖啡沖泡方式</span><span>義式／賽風／摩卡</span><span>過濾／美式／掛耳</span><span>沖泡來源</span></span>
+    </div>
   </section>
 
   <section class="slide">
@@ -537,7 +596,10 @@
         <p class="source">來源參考：粉水比 1:19–1:21、93°C、磨粉後 15 分鐘內測乾香。</p>
       </div>
     </div>
-    <div class="footer"><span>感官品評</span><span>11</span></div>
+    <div class="footer">
+      <span>感官品評</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>Coffee Cupping</span><span>杯測程序</span><span>杯測感官項目</span></span>
+    </div>
   </section>
 
   <section class="slide dark">
@@ -551,7 +613,10 @@
       </div>
       <p class="lede"><span class="scribble">完成主鏈條：</span>栽培 → 處理 → 烘焙 → 沖煮 → 品評</p>
     </div>
-    <div class="footer"><span>臺灣咖啡知識脈絡</span><span>12</span></div>
+    <div class="footer">
+      <span>臺灣咖啡知識脈絡</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>臺灣咖啡產業簡史</span><span>臺灣咖啡風味輪</span><span>TCAGs 分級系統</span></span>
+    </div>
   </section>
 
   <section class="slide">
@@ -573,7 +638,10 @@
         <p><span class="tag">無斷鏈 / 無孤兒頁</span></p>
       </div>
     </div>
-    <div class="footer"><span>維護模型</span><span>13</span></div>
+    <div class="footer">
+      <span>維護模型</span>
+      <span class="wiki-map"><strong>對應 Wiki</strong><span>Wiki 維護規範</span><span>來源索引</span><span>操作日誌</span><span>Ingest／Query／Lint／Review</span></span>
+    </div>
   </section>
 </main>
 <div class="progress"></div>
