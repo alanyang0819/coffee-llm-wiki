@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>咖啡：從種子到一杯飲品</title>
+  <style>
+    :root {
+      --cream: #f6eedc;
+      --paper: #fffaf0;
+      --coffee: #3a271c;
+      --coffee-2: #604632;
+      --caramel: #c88a48;
+      --caramel-light: #ecd2ac;
+      --sage: #728067;
+      --ink-faint: rgba(58,39,28,.14);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #342419;
+      color: var(--coffee);
+      font-family: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .18;
+      background-image:
+        radial-gradient(circle at 18% 22%, rgba(58,39,28,.12) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 71% 68%, rgba(58,39,28,.10) 0 1px, transparent 1.5px);
+      background-size: 29px 31px, 37px 35px;
+      z-index: 100;
+    }
+    .deck { position: relative; width: 100vw; height: 100vh; }
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 5.2vh 7vw 4.2vh;
+      background:
+        linear-gradient(rgba(58,39,28,.025) 1px, transparent 1px),
+        var(--cream);
+      background-size: 100% 40px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(24px) rotate(.15deg);
+      transition: opacity .32s ease, transform .32s ease;
+    }
+    .slide.active { opacity: 1; visibility: visible; transform: none; }
+    .slide.dark {
+      background:
+        radial-gradient(circle at 82% 18%, rgba(236,210,172,.10), transparent 24%),
+        linear-gradient(135deg, #3a271c, #604632);
+      color: var(--cream);
+    }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--caramel);
+      font-size: clamp(12px, 1.05vw, 16px);
+      font-weight: 900;
+      letter-spacing: .16em;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--caramel);
+      transform: rotate(-2deg);
+    }
+    .dark .eyebrow { color: #e6b778; }
+    .dark .eyebrow::before { background: #e6b778; }
+    h1, h2 {
+      font-family: "Comic Sans MS", "Segoe Print", "Bradley Hand", "Chalkboard SE", cursive;
+      letter-spacing: -.035em;
+      line-height: 1.08;
+    }
+    h1 { margin: 2vh 0 0; font-size: clamp(46px, 5.8vw, 86px); }
+    h2 { margin: 1vh 0 0; font-size: clamp(34px, 4.1vw, 62px); }
+    h3 { margin: 0 0 1vh; font-size: clamp(19px, 1.65vw, 26px); }
+    p { line-height: 1.55; }
+    .lede {
+      max-width: 850px;
+      margin-top: 2.2vh;
+      color: var(--coffee-2);
+      font-size: clamp(19px, 2vw, 30px);
+    }
+    .dark .lede { color: rgba(246,238,220,.84); }
+    .content {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .split {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: clamp(28px, 5vw, 74px);
+      align-items: center;
+    }
+    .split.reverse { grid-template-columns: .92fr 1.08fr; }
+    .cover {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      align-items: center;
+    }
+    .cover-art {
+      min-height: 58%;
+      display: grid;
+      place-items: center;
+      transform: rotate(-1deg);
+    }
+    .cover-art svg { width: min(31vw, 420px); height: auto; }
+    .cover-art img {
+      width: min(29vw, 390px);
+      max-height: 52vh;
+      object-fit: contain;
+      border: 2px solid rgba(246,238,220,.22);
+      border-radius: 48% 52% 46% 54%;
+      background: rgba(255,250,240,.08);
+      padding: 10px;
+      transform: rotate(1deg);
+    }
+    .visual {
+      min-height: 45vh;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--ink-faint);
+      border-radius: 24px 18px 26px 20px;
+      background: rgba(255,250,240,.55);
+      transform: rotate(.25deg);
+    }
+    .visual svg { width: min(82%, 410px); max-height: 36vh; }
+    .visual img {
+      width: calc(100% - 28px);
+      height: calc(100% - 28px);
+      max-height: 39vh;
+      object-fit: contain;
+      border-radius: 16px 12px 18px 14px;
+      filter: saturate(.82) sepia(.06);
+    }
+    .scribble {
+      position: relative;
+      display: inline;
+      z-index: 0;
+    }
+    .scribble::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: -2%;
+      right: -2%;
+      bottom: .04em;
+      height: .24em;
+      border-radius: 50%;
+      background: var(--caramel-light);
+      transform: rotate(-1deg);
+    }
+    .dark .scribble::after { background: rgba(200,138,72,.48); }
+    .timeline {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 5vh;
+    }
+    .timeline svg.route {
+      position: absolute;
+      left: 8%;
+      top: 54px;
+      width: 84%;
+      height: 48px;
+      overflow: visible;
+      pointer-events: none;
+    }
+    .step {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      font-size: clamp(13px, 1.25vw, 18px);
+    }
+    .step-icon {
+      width: clamp(64px, 6vw, 92px);
+      height: clamp(64px, 6vw, 92px);
+      margin: 0 auto 12px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--coffee);
+      border-radius: 48% 52% 46% 54%;
+      background: var(--paper);
+      transform: rotate(var(--tilt, -2deg));
+      box-shadow: 4px 5px 0 rgba(200,138,72,.22);
+    }
+    .step:nth-child(3) .step-icon { --tilt: 2deg; }
+    .step:nth-child(4) .step-icon { --tilt: -1deg; }
+    .step-icon svg { width: 62%; height: 62%; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(14px, 2vw, 28px);
+      margin-top: 3vh;
+    }
+    .cards.four { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      min-height: 25vh;
+      padding: clamp(18px, 2.1vw, 32px);
+      border: 2px solid var(--ink-faint);
+      border-radius: 20px 16px 23px 17px;
+      background: rgba(255,250,240,.68);
+      transform: rotate(var(--card-tilt, -.25deg));
+    }
+    .card:nth-child(2) { --card-tilt: .35deg; }
+    .card:nth-child(3) { --card-tilt: -.15deg; }
+    .card:nth-child(4) { --card-tilt: .25deg; }
+    .card strong {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 1.2vh;
+      font-size: clamp(19px, 1.8vw, 27px);
+    }
+    .card strong svg { width: 30px; height: 30px; flex: 0 0 auto; }
+    .card p {
+      margin: 1vh 0 0;
+      color: var(--coffee-2);
+      font-size: clamp(14px, 1.28vw, 19px);
+    }
+    .tag {
+      display: inline-block;
+      margin-top: 1.2vh;
+      padding: 5px 10px 6px;
+      border: 1.5px solid var(--caramel);
+      border-radius: 50% 45% 52% 46%;
+      color: var(--coffee);
+      font-size: clamp(12px, 1vw, 15px);
+      font-weight: 900;
+      transform: rotate(-1deg);
+    }
+    ul.clean { list-style: none; margin: 2.2vh 0 0; padding: 0; }
+    ul.clean li {
+      position: relative;
+      margin: 1.25vh 0;
+      padding-left: 1.55em;
+      font-size: clamp(16px, 1.48vw, 22px);
+      line-height: 1.48;
+    }
+    ul.clean li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .42em;
+      width: 11px;
+      height: 11px;
+      border: 2px solid var(--caramel);
+      border-radius: 58% 42% 55% 45%;
+      transform: rotate(8deg);
+    }
+    .metric-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 2.4vh 0;
+    }
+    .metric {
+      min-width: 118px;
+      height: 118px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--coffee);
+      border-radius: 52% 48% 55% 45%;
+      background: var(--caramel-light);
+      font-family: "Comic Sans MS", "Segoe Print", cursive;
+      font-size: clamp(25px, 2.5vw, 38px);
+      font-weight: 900;
+      transform: rotate(-2deg);
+    }
+    .metric-row span { max-width: 180px; font-size: clamp(13px, 1.15vw, 17px); }
+    .source {
+      margin-top: 2vh;
+      padding-top: 1.2vh;
+      border-top: 1.5px dashed var(--ink-faint);
+      color: var(--coffee-2);
+      font-size: clamp(11px, 1vw, 14px);
+    }
+    .dark .source { border-color: rgba(246,238,220,.18); color: rgba(246,238,220,.72); }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      color: var(--coffee-2);
+      font-size: clamp(11px, .9vw, 14px);
+    }
+    .dark .footer { color: rgba(246,238,220,.68); }
+    .progress {
+      position: fixed;
+      z-index: 110;
+      left: 0;
+      bottom: 0;
+      height: 5px;
+      background: var(--caramel);
+      transition: width .32s ease;
+    }
+    .counter {
+      position: fixed;
+      z-index: 110;
+      right: 18px;
+      bottom: 13px;
+      color: rgba(58,39,28,.55);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .dark + .counter { color: rgba(246,238,220,.72); }
+    svg.doodle * {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    svg.doodle .fill { fill: currentColor; stroke: none; }
+    svg.doodle .gold { color: var(--caramel); }
+    @media (max-width: 900px) {
+      .slide { padding: 4vh 5vw 3vh; }
+      .split, .split.reverse, .cover { grid-template-columns: 1fr; }
+      .cover-art { display: none; }
+      .visual { min-height: 28vh; }
+      .cards, .cards.four { grid-template-columns: 1fr; }
+      .card { min-height: auto; }
+      .timeline { grid-template-columns: repeat(5, minmax(76px, 1fr)); overflow: hidden; }
+    }
+    @media print {
+      body { overflow: visible; background: white; }
+      .deck { height: auto; }
+      .slide {
+        position: relative;
+        width: 13.333in;
+        height: 7.5in;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        page-break-after: always;
+        break-after: page;
+      }
+      .progress, .counter { display: none; }
+    }
+  </style>
+</head>
+<body>
+<main class="deck">
+  <section class="slide active dark">
+    <div class="eyebrow">COFFEE / KNOWLEDGE OVERVIEW</div>
+    <div class="cover">
+      <div>
+        <h1>咖啡：<br>從<span class="scribble">種子</span>到一杯飲品</h1>
+        <p class="lede">種植、處理、烘焙、沖煮與杯測的完整旅程</p>
+      </div>
+      <div class="cover-art">
+        <img src="../raw/assets/咖啡果實.png" alt="咖啡果實">
+      </div>
+    </div>
+    <div class="footer"><span>咖啡 LLM Wiki</span><span>2026</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">THE JOURNEY</div>
+    <div class="content">
+      <h2>一顆咖啡，經過<span class="scribble">五個決策節點</span></h2>
+      <div class="timeline">
+        <svg class="route doodle gold" viewBox="0 0 800 48" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M40 28C170 5 245 43 360 24S595 10 760 26" stroke-dasharray="5 7"/>
+          <path d="M751 18l12 8-14 7"/>
+        </svg>
+        <div class="step"><div class="step-icon"><svg class="doodle" viewBox="0 0 60 60"><path d="M30 48V26M30 27C18 25 12 16 14 8c12 0 18 7 16 19M31 30c13-2 18-10 16-18-11 1-17 7-16 18"/><path d="M18 48h24"/></svg></div><strong>種植</strong><br>環境 × 品種</div>
+        <div class="step"><div class="step-icon"><svg class="doodle" viewBox="0 0 60 60"><path d="M15 35c0-13 8-22 18-22s18 9 18 22-7 17-18 17S15 48 15 35Z"/><path d="M33 13c8 8 8 31 0 39M17 34h34"/></svg></div><strong>處理</strong><br>果實 × 乾燥</div>
+        <div class="step"><div class="step-icon"><svg class="doodle" viewBox="0 0 60 60"><path d="M12 43h36M16 43c2-14 10-24 14-30 5 7 12 16 14 30"/><path d="M24 43c-2-8 2-13 7-18 5 6 7 11 5 18"/></svg></div><strong>烘焙</strong><br>熱量 × 曲線</div>
+        <div class="step"><div class="step-icon"><svg class="doodle" viewBox="0 0 60 60"><path d="M15 21h30l-5 29H20Z"/><path d="M20 21c0-7 4-10 10-10s10 3 10 10M28 7h4"/><path d="M23 31c7 4 11 4 17 0"/></svg></div><strong>沖煮</strong><br>研磨 × 萃取</div>
+        <div class="step"><div class="step-icon"><svg class="doodle" viewBox="0 0 60 60"><path d="M11 23h38M15 23l5 23h20l5-23M23 17c0-5 3-8 7-8s7 3 7 8"/><path d="M24 31c4 4 8 4 12 0"/></svg></div><strong>杯測</strong><br>感官 × 回饋</div>
+      </div>
+      <p class="source">品質回饋：杯測結果可修正處理、烘焙與栽種決策。</p>
+    </div>
+    <div class="footer"><span>主要流程</span><span>02</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">01 / CULTIVATION</div>
+    <div class="split">
+      <div class="content">
+        <h2>種植：品質在採收前就開始累積</h2>
+        <ul class="clean">
+          <li>適宜氣溫約 <strong>15–24°C</strong>；超過 30°C 可能灼傷葉片。</li>
+          <li>阿拉比卡偏好涼爽、遮陰與火山灰土壤。</li>
+          <li>良好排水、<strong>pH 5.2–6.2</strong> 是土壤管理核心。</li>
+          <li>種植後約 3–4 年開始結果，整枝維持樹勢與品質。</li>
+        </ul>
+        <p class="source">來源：coffee-cultivation-tbrs.md；台灣栽培建議不應直接視為所有產區通則。</p>
+      </div>
+      <div class="visual">
+        <img src="../raw/assets/咖啡果實.png" alt="咖啡果實">
+      </div>
+    </div>
+    <div class="footer"><span>種植</span><span>03</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">01 / CULTIVATION</div>
+    <div class="content">
+      <h2>品種、繁殖與管理</h2>
+      <div class="cards">
+        <article class="card"><strong><svg class="doodle" viewBox="0 0 40 40"><path d="M20 34V15M20 20C10 18 7 12 9 6c9 1 13 6 11 14M21 22c10-2 13-8 12-14-9 1-13 6-12 14"/></svg>阿拉比卡</strong><p>對強日照耐受性較低；適合火山灰土壤。</p><span class="tag">較需遮陰</span></article>
+        <article class="card"><strong><svg class="doodle" viewBox="0 0 40 40"><path d="M8 29c5-16 20-20 26-7-3 8-11 13-21 10M14 20l15 12"/></svg>羅布斯塔</strong><p>適合含豐富腐植質的土壤；現有來源未提供完整風味細節。</p><span class="tag">需補實證</span></article>
+        <article class="card"><strong><svg class="doodle" viewBox="0 0 40 40"><path d="M20 34V10M10 34h20M13 16l7 5 7-7M13 26l7-5 7 7"/></svg>繁殖與整枝</strong><p>種子繁殖為主，新鮮種子約 5–8 週發芽；輪流更新主枝。</p><span class="tag">定植 12–3 月</span></article>
+      </div>
+    </div>
+    <div class="footer"><span>實體與概念</span><span>04</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">02 / PROCESSING</div>
+    <div class="split reverse">
+      <div class="visual">
+        <img src="../raw/assets/咖啡處理法比較.png" alt="咖啡處理法比較">
+      </div>
+      <div class="content">
+        <h2>處理：移除果實，保留乾燥生豆</h2>
+        <ul class="clean">
+          <li><strong>日曬：</strong>整粒果實乾燥，風味帶水果、甜感與發酵風格。</li>
+          <li><strong>水洗：</strong>去皮、發酵、去膠質後乾燥，風味乾淨明亮。</li>
+          <li><strong>蜜處理：</strong>保留部分果肉與黏膜，介於日曬與水洗之間。</li>
+        </ul>
+        <p class="source">三法乾燥後生豆含水率約 11–13%；實際值需依標準校正。</p>
+      </div>
+    </div>
+    <div class="footer"><span>採收後處理</span><span>05</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">02 / PROCESSING</div>
+    <div class="content">
+      <h2>蜜處理：果肉留存越多，越接近日曬</h2>
+      <div class="cards four">
+        <article class="card"><strong><svg class="doodle" viewBox="0 0 40 40"><circle cx="20" cy="20" r="12"/><path d="M20 8c5 5 5 19 0 24M8 20h24"/></svg>白蜜</strong><p>較少果肉留存</p><span class="tag">更接近水洗</span></article>
+        <article class="card"><strong><svg class="doodle" viewBox="0 0 40 40"><circle cx="20" cy="20" r="12"/><path d="M20 8c7 6 7 18 0 24M11 14c5 3 13 3 18 0"/></svg>黃蜜</strong><p>較少至中量果肉</p><span class="tag">明亮 × 甜感</span></article>
+        <article class="card"><strong><svg class="doodle" viewBox="0 0 40 40"><circle cx="20" cy="20" r="12"/><path d="M20 8c8 7 8 17 0 24M9 17c7 5 15 5 22 0"/></svg>紅蜜</strong><p>中量果肉留存</p><span class="tag">平衡型</span></article>
+        <article class="card"><strong><svg class="doodle" viewBox="0 0 40 40"><circle cx="20" cy="20" r="12" class="gold"/><path d="M20 8c9 8 9 16 0 24M9 20h22"/></svg>黑蜜</strong><p>較多果肉留存</p><span class="tag">更接近日曬</span></article>
+      </div>
+      <p class="source">黑／紅／黃／白的精確比例在來源中未給；名稱因產區作法而異。</p>
+    </div>
+    <div class="footer"><span>蜜處理分類</span><span>06</span></div>
+  </section>
+
+  <section class="slide dark">
+    <div class="eyebrow">03 / ROASTING</div>
+    <div class="split">
+      <div class="content">
+        <h2>烘焙：讓化學與物理同時發生</h2>
+        <div class="metric-row"><div class="metric">12–21%</div><span>烘焙失重範例</span></div>
+        <div class="metric-row"><div class="metric">+60%</div><span>豆體體積膨大</span></div>
+        <p>脫水 → 焦糖化 / 梅納反應 → 一爆 → 二爆 → 快速冷卻</p>
+      </div>
+      <div class="visual" style="background:rgba(255,250,240,.06);border-color:rgba(246,238,220,.18)">
+        <img src="../raw/assets/咖啡豆烘焙曲線.png" alt="咖啡豆烘焙曲線">
+      </div>
+    </div>
+    <div class="footer"><span>烘焙變化</span><span>07</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">03 / ROASTING</div>
+    <div class="content">
+      <h2>A / B / C：烘焙曲線的三段決策</h2>
+      <div class="cards four">
+        <article class="card"><strong>Ａ｜均質期</strong><p>影響熟透度與餘韻。過短可能出現青草、豆漿味與澀感。</p></article>
+        <article class="card"><strong>Ｂ｜轉黃期</strong><p>梅納反應影響厚實度與甜度；觀察豆表由白轉黃。</p></article>
+        <article class="card"><strong>Ｃ｜發展期</strong><p>平衡酸、甜與香氣；爆裂後的時間與升溫決定風味。</p></article>
+        <article class="card"><strong>冷卻</strong><p>約 2–3 分鐘將豆溫降至 170°C；延遲會影響品質。</p></article>
+      </div>
+      <p class="source">曲線案例來自特定烘焙機與批次，不是通用配方。</p>
+    </div>
+    <div class="footer"><span>烘焙階段</span><span>08</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">04 / BREWING</div>
+    <div class="split">
+      <div class="visual">
+        <img src="../raw/assets/手沖咖啡步驟.png" alt="手沖咖啡步驟">
+      </div>
+      <div class="content">
+        <h2>沖煮：研磨粗細是萃取的入口</h2>
+        <ul class="clean">
+          <li>研磨愈細：粉層阻力與萃取時間可能上升，較易過度萃取。</li>
+          <li>研磨愈粗：阻力下降，較易萃取不足。</li>
+          <li>淺焙纖維完整、不易萃取，可研磨稍細；深焙可研磨稍粗。</li>
+          <li>高溫、長時間與強水流都可能拉升萃取率與苦澀感。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer"><span>萃取控制</span><span>09</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">04 / BREWING</div>
+    <div class="content">
+      <h2>不同沖泡方式，換的是壓力與接觸</h2>
+      <div class="cards">
+        <article class="card"><strong><svg class="doodle" viewBox="0 0 40 40"><path d="M10 18h20l-3 17H13ZM15 18c0-8 10-8 10 0M12 35h16"/></svg>義式</strong><p>高壓萃取；來源提供 90.5–96°C、8.5–9.5 bar、20–30 秒作為概述。</p><span class="tag">濃縮 × 高壓</span></article>
+        <article class="card"><strong><svg class="doodle" viewBox="0 0 40 40"><path d="M9 17h22l-7 16H16ZM20 17V7M14 7h12M12 33h16"/></svg>賽風／摩卡</strong><p>賽風利用虹吸與半真空；摩卡利用蒸氣壓力與蒸餾式流動。</p><span class="tag">虹吸 × 蒸氣</span></article>
+        <article class="card"><strong><svg class="doodle" viewBox="0 0 40 40"><path d="M11 8h18l-4 12H15ZM15 20h10l-3 13H18ZM14 33h12"/></svg>手沖／掛耳／美式機</strong><p>重力、濾紙與注水方式控制接觸時間及均勻度。</p><span class="tag">重力 × 濾液</span></article>
+      </div>
+    </div>
+    <div class="footer"><span>沖泡方式</span><span>10</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">05 / CUPPING</div>
+    <div class="split reverse">
+      <div class="visual">
+        <img src="../raw/assets/咖啡果實.png" alt="咖啡與杯測品評">
+      </div>
+      <div class="content">
+        <h2>杯測：把直覺變成可比較的資料</h2>
+        <ul class="clean">
+          <li>乾淨度、甜度、酸度、乾濕香</li>
+          <li>口腔觸感、餘韻、均衡度、整體</li>
+          <li>用途：發掘原始與烘焙特性、決定採購及調整栽種、處理與保存</li>
+        </ul>
+        <p class="source">來源參考：粉水比 1:19–1:21、93°C、磨粉後 15 分鐘內測乾香。</p>
+      </div>
+    </div>
+    <div class="footer"><span>感官品評</span><span>11</span></div>
+  </section>
+
+  <section class="slide dark">
+    <div class="eyebrow">TAIWAN CONTEXT</div>
+    <div class="content">
+      <h2>台灣脈絡：歷史、風味輪與分級形成閉環</h2>
+      <div class="cards">
+        <article class="card"><strong>歷史</strong><p>1881/1884 傳入；日治試種；1933 銹病；戰後復甦；2000 年後精品化。</p></article>
+        <article class="card"><strong>風味輪</strong><p>花香、水果、發酵、糖香、堅果、草本、香料；以三大感官描述。</p></article>
+        <article class="card"><strong>TCAGs</strong><p>特選、精選、優選；結合溯源、智慧挑豆與數位杯測評鑑。</p></article>
+      </div>
+      <p class="lede"><span class="scribble">完成主鏈條：</span>栽培 → 處理 → 烘焙 → 沖煮 → 品評</p>
+    </div>
+    <div class="footer"><span>臺灣咖啡知識脈絡</span><span>12</span></div>
+  </section>
+
+  <section class="slide">
+    <div class="eyebrow">KNOWLEDGE MODEL</div>
+    <div class="split">
+      <div class="content">
+        <h2>這份 Wiki 如何持續累積</h2>
+        <ul class="clean">
+          <li><strong>Ingest：</strong>逐篇讀取來源、建立來源頁並更新交叉引用。</li>
+          <li><strong>Query：</strong>從索引定位，再跨流程與概念綜合回答。</li>
+          <li><strong>Lint：</strong>檢查斷鏈、孤兒頁、衝突、過時主張與知識缺口。</li>
+          <li><strong>Review：</strong>重大衍生結論與來源衝突保留給使用者審閱。</li>
+        </ul>
+      </div>
+      <div class="card" style="min-height:43vh;display:flex;flex-direction:column;justify-content:center">
+        <h3>目前基線</h3>
+        <p><strong style="font-size:48px">10</strong><br>原始來源</p>
+        <p><strong style="font-size:48px">38</strong><br>Wiki 頁面</p>
+        <p><span class="tag">無斷鏈 / 無孤兒頁</span></p>
+      </div>
+    </div>
+    <div class="footer"><span>維護模型</span><span>13</span></div>
+  </section>
+</main>
+<div class="progress"></div>
+<div class="counter"></div>
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const progress = document.querySelector('.progress');
+  const counter = document.querySelector('.counter');
+  let current = 0;
+
+  function show(index) {
+    current = Math.max(0, Math.min(slides.length - 1, index));
+    slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+    progress.style.width = ((current + 1) / slides.length * 100) + '%';
+    counter.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+  }
+  const next = () => show(current + 1);
+  const prev = () => show(current - 1);
+  document.addEventListener('keydown', event => {
+    if (['ArrowRight','PageDown',' ','Enter'].includes(event.key)) { event.preventDefault(); next(); }
+    if (['ArrowLeft','PageUp','Backspace'].includes(event.key)) { event.preventDefault(); prev(); }
+    if (event.key === 'Home') show(0);
+    if (event.key === 'End') show(slides.length - 1);
+  });
+  let touchX = null;
+  document.addEventListener('touchstart', event => { touchX = event.changedTouches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', event => {
+    if (touchX === null) return;
+    const delta = event.changedTouches[0].clientX - touchX;
+    if (Math.abs(delta) > 45) delta < 0 ? next() : prev();
+    touchX = null;
+  }, {passive:true});
+  document.addEventListener('click', event => {
+    if (event.target.closest('a')) return;
+    event.clientX > window.innerWidth * .5 ? next() : prev();
+  });
+  show(0);
+</script>
+</body>
+</html>
